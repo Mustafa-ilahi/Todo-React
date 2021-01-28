@@ -56,7 +56,6 @@ class App extends React.Component{
         border: "2px solid black",
         borderRadius: "20px",
         textAlign: "center",
-        backgroundColor: "#000000",
         color: "white"
       }}>
         <h1 style={{  border: "5px solid #C63B3B", borderRadius: "5px"}}>Todo App</h1>
