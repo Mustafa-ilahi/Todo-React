@@ -4,6 +4,7 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import firebase from './config/firebase';
+import { ThemeConsumer } from 'react-bootstrap/esm/ThemeProvider';
 
 class App extends React.Component{
   constructor(){
@@ -49,7 +50,11 @@ class App extends React.Component{
     this.setState({
       todos: this.state.todos
     })
-    firebase.database().ref("users").set(this.state.todos);
+    // firebase.database().ref("users").set(this.state.todos);
+  }
+  componentDidMount = ()=> {
+    firebase.database().ref("users").on("child_added",function(data){
+    })
   }
   
     render(){
