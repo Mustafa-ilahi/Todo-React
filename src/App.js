@@ -3,6 +3,7 @@ import './App.css';
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import firebase from './config/firebase';
 
 class App extends React.Component{
   constructor(){
@@ -19,6 +20,7 @@ class App extends React.Component{
       todos: [...this.state.todos,obj],
       value:''
     })
+    firebase.database().ref("users").push(obj);
   }
   delete_item = (index) => {
     // console.log(index);
@@ -26,6 +28,7 @@ class App extends React.Component{
     this.setState({
       todos: this.state.todos
     })
+
   }
   edit_item = (index,value) => {
     this.state.todos[index].edit = true;
@@ -46,6 +49,7 @@ class App extends React.Component{
     this.setState({
       todos: this.state.todos
     })
+    firebase.database().ref("users").set(this.state.todos);
   }
   
     render(){
@@ -59,8 +63,6 @@ class App extends React.Component{
         color: "white"
       }}>
         <h1 style={{  border: "5px solid #C63B3B", borderRadius: "5px"}}>Todo App</h1>
-        {/* <hr style={{  border: "1px solid #C63B3B", borderRadius: "5px"}}/> */}
-
         <br/> 
          <input value={value} type="text" placeholder="Enter Items" onChange={(e)=>{this.setState({value:e.target.value})}} style={{height:"50px",fontSize:"20px",borderRadius:"10px" , color:"blue"}}/>
           <Button onClick={this.addItems} variant="outline-primary">Add Items</Button>
