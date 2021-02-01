@@ -11,7 +11,8 @@ class App extends React.Component{
     super()
     this.state = {
       todos: [{title: "jazzy" , edit: false},{title: "mustafa", edit: false}],
-      value: ''
+      value: '',
+      name: ''
     }
   }
   addItems = () =>{
@@ -23,13 +24,14 @@ class App extends React.Component{
     })
     firebase.database().ref("users").push(obj);
   }
-  delete_item = (index) => {
+  delete_item = (index,value) => {
     // console.log(index);
     this.state.todos.splice(index,1);
     this.setState({
       todos: this.state.todos
     })
-
+    // console.log(value.id)
+    firebase.database().ref("users").child(value.id).remove();
   }
   edit_item = (index,value) => {
     this.state.todos[index].edit = true;
@@ -45,19 +47,31 @@ class App extends React.Component{
       todos: this.state.todos
     })
   }
-  update = (index) => {
+  update = (index,value) => {
     this.state.todos[index].edit = false;
     this.setState({
       todos: this.state.todos
     })
-    // firebase.database().ref("users").set(this.state.todos);
+    // console.log(value.id);
+    firebase.database().ref("users").child(value.id).set({
+      title: value.title
+    })
   }
   componentDidMount = ()=> {
-    firebase.database().ref("users").on("child_added",function(data){
+    
+    firebase.database().ref("users").on("child_added", data =>{
+      this.state.todos.push({
+        id : data.key,
+        title: data.val().title
+      })
+      this.setState({
+        todos: this.state.todos
+      })
     })
   }
   
     render(){
+    console.log(this.state.name);
     document.body.style.backgroundColor = "black";
     let {todos,value} = this.state;
     return(
@@ -78,11 +92,11 @@ class App extends React.Component{
             return <li key={i} style={{listStyleType: "none"}}> 
               {v.edit?<input value={v.title} type="text" onChange={(e) => this.handle_change(e,i)} style={{height:"50px", width:"120px",fontSize:"20px",borderRadius:"10px",color:"red"}}/>: v.title}
               {v.edit? 
-            <Button onClick={()=>this.update(i)} variant="outline-success">Update</Button>
+            <Button onClick={()=>this.update(i,v)} variant="outline-success">Update</Button>
             : 
             <Button onClick={()=>this.edit_item(i,v)} variant="outline-secondary">Edit</Button>
           }
-            <Button onClick={()=> this.delete_item(i)} variant="outline-danger">Delete</Button>
+            <Button onClick={()=> this.delete_item(i,v)} variant="outline-danger">Delete</Button>
             <hr style={{  border: "1px solid #C63B3B", borderRadius: "5px"}}/>
             </li>
           }
