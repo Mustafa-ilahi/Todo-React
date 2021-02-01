@@ -10,7 +10,7 @@ class App extends React.Component{
   constructor(){
     super()
     this.state = {
-      todos: [{title: "jazzy" , edit: false},{title: "mustafa", edit: false}],
+      todos: [{title: "Mustafa" , edit: false}],
       value: '',
       name: ''
     }
